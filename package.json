@@ -1,5 +1,5 @@
 {
-  "name": "bloggy",
+  "name": "bloggy-md",
   "description": "a simple CLI markdown -> html blog generator",
   "keywords": ["markdown", "blog", "cli", "static-site"],
   "author": "unium <uniumfr@gmail.com>",

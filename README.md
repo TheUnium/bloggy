@@ -119,7 +119,7 @@ bloggy --init my-blog
 it's pretty simple:
 
 ```bash
-npm install -g bloggy
+npm install -g bloggy-md
 ```
 
 then just run:
