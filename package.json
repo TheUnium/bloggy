@@ -1,0 +1,17 @@
+{
+  "name": "bloggy",
+  "module": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "bun build src/bloggy.js --compile --minify --outfile ./build/bloggy"
+  },
+  "bin": {
+    "bloggy": "src/bloggy.js"
+  },
+  "dependencies": {
+    "colorette": "^2.0.20",
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.8",
+    "yaml": "^2.7.1"
+  }
+}
