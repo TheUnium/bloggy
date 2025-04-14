@@ -78,6 +78,7 @@ export const DEFAULT_HTML_TEMPLATE = `<!DOCTYPE html>
 </head>
 <body>
     <article>
+        <h1><!-- [BLOGGY::TITLE] --></h1>
         <!-- [BLOGGY::CONTENT] -->
     </article>
     <div class="footer">
