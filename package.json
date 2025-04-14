@@ -1,13 +1,27 @@
 {
   "name": "bloggy",
+  "description": "a simple CLI markdown -> html blog generator",
+  "keywords": ["markdown", "blog", "cli", "static-site"],
+  "author": "unium <uniumfr@gmail.com>",
+  "license": "MIT",
   "module": "index.js",
   "type": "module",
+  "version": "1.1.0",
   "scripts": {
     "build": "bun build src/bloggy.js --compile --minify --outfile ./build/bloggy"
   },
   "bin": {
     "bloggy": "src/bloggy.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheUnium/bloggy.git"
+  },
+  "files": [
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
   "dependencies": {
     "colorette": "^2.0.20",
     "highlight.js": "^11.11.1",
