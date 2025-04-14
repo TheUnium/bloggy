@@ -88,7 +88,36 @@ it looks for these magic placeholder tags:
 
 ## how do i install it
 
-its pretty simple :
+you can clone this repo:
+
+```shell
+git clone https://github.com/TheUnium/bloggy.git
+```
+
+then simple link it :
+
+```shell
+npm link
+```
+
+orrr..... you can build it yourself, using [bun](https://bun.sh/):
+
+```shell
+bun run build
+```
+
+after either method, you can just run it:
+
+```bash
+bloggy --init my-blog
+```
+
+<details>
+
+<summary>npm method</summary>
+
+it's pretty simple:
+
 ```bash
 npm install -g bloggy
 ```
@@ -100,6 +129,7 @@ bloggy --init my-blog
 ```
 
 after which you can start writing markdown!
+</details>
 
 ---
 
