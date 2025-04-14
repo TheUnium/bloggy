@@ -21,9 +21,11 @@ export const DEFAULT_CONFIG_TEMPLATE = `post:
   title: "Unnamed Post"
   description: "No description provided... so sad... ⏳⏳⏳"
   color: "#72d572"
+
 paths:
   template: "{template_path}"
   output_dir: "{output_dir}"
+
 rules:
   allowRawHtml: false
   maxParagraphLength: 500
@@ -32,6 +34,7 @@ rules:
   maxHeaderDepth: 4
   requireListSpacing: true
   requireTableSeparators: true
+  
 validation:
   enabled: true
   errors: true

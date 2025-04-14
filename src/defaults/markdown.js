@@ -18,21 +18,17 @@
  */
 
 export const DEFAULT_MARKDOWN_TEMPLATE = `---
-title: The Blog Post
-description: we love bloggy here fr
-color: #4CAF50
+title: hello world!
+description: this is the best post you will ever read
+color: #72d572
 ---
-# Welcome to Bloggy!
-Hello there!
-## The...
-wow
-### Omg...
-omg
-#### When the thingy does the thing when like then sometimes
-what?
-\`\`\`javascript
-function sayHello() {
-  console.log("Hello, Markdown!");
-}
-\`\`\`
+
+here is my post!!! i wrote things!! isnt this so cool!
+
+- and yes
+- it supports lists
+
+> and other markdown stuff
+
+\`(most of the time)\`
 `;
