@@ -27,13 +27,18 @@ ${c.bold("Options:")}
   ${c.green("-h")}, ${c.green("--help")}         ...you know what this does, come on
   ${c.green("-v")}, ${c.green("--version")}      shows version 🤯
   ${c.green("-w")}, ${c.green("--watch")}        watches for changes to the md file provided, then regens html file automatically when updated
+  ${c.green("-s")}, ${c.green("--server")}       starts a web server with live reload (can be used with or without ${c.green("--watch")})
   ${c.green("-i")}, ${c.green("--init")} [dir]   initializes a new bloggy project in specified directory
+  ${c.green("--port")} ${c.yellow("<number>")}   specify port for the web server (default: 3000)
+  ${c.green("--no-server")}        doesnt start server when using watch mode
   ${c.green("--no-validate")}      skip all markdown validation checks
   ${c.green("--no-errors")}        skip only error validation
   ${c.green("--no-warns")}         skip only warning validation
 
 ${c.bold("Example:")}
   bloggy ${c.magenta("my_post.md")} ${c.green("--no-warns")}
+  bloggy ${c.magenta("my_post.md")} ${c.green("--server")} ${c.green("--port")} ${c.yellow("8080")}
+  bloggy ${c.magenta("my_post.md")} ${c.green("--watch")} ${c.green("--server")}
   bloggy ${c.green("--init")} ${c.magenta("my-blog")}
 
 ${c.bold("Notes:")}

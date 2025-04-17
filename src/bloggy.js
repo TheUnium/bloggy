@@ -29,7 +29,7 @@ import { setupWatcher } from "./watcher.js";
 import { CONFIG, loadConfig, validateMarkdown, printValidationResults, parseFrontmatter, replaceAll, initProject } from "./utils/index.js";
 import { printHelp, printVersion } from "./display.js";
 
-const VERSION = "1.1.0";
+const VERSION = "1.2.0";
 
 
 async function bloggy(inputPath, options = {}) {
@@ -43,7 +43,7 @@ async function bloggy(inputPath, options = {}) {
     const fullPath = resolve(inputPath);
 
     if (!fullPath.endsWith(".md")) {
-        console.error(c.red("grrrr gimme md file (like .md files ykyk)"));
+        console.error(c.red(`grrrr gimme md file (like .md files ykyk)\n${c.dim("try --help or -h to view the help message, if you aren't sure on what to do")}`));
         process.exit(1);
     }
 
@@ -131,24 +131,32 @@ if (args.includes("--init") || args.includes("-i")) {
 }
 
 const inputPath = args.find(arg => arg.endsWith(".md"));
+
 const watchMode = args.includes("--watch") || args.includes("-w");
+const serverMode = args.includes("--server") || args.includes("-s");
+const noServer = args.includes("--no-server");
+const portIndex = args.indexOf("--port");
+const serverPort = portIndex !== -1 ? parseInt(args[portIndex + 1], 10) || 3000 : 3000;
+
 const skipValidation = args.includes("--no-validate");
 const showErrors = !args.includes("--no-errors");
 const showWarns = !args.includes("--no-warns");
 
 if (!inputPath) {
-    console.error(c.red("erm where the sigma is file 😔"));
+    console.error(`${c.red(`erm where the sigma is file 😔\n`)}${c.dim("try --help or -h to view the help message, if you aren't sure on what to do")}`);
     process.exit(1);
 }
 
-if (watchMode) {
+if (watchMode || serverMode) {
     console.log(c.blueBright(`👀 watching for changes to ${inputPath}...`));
 
     await loadConfig();
     await setupWatcher(inputPath, {
         skipValidation,
         showErrors,
-        showWarns
+        showWarns,
+        enableServer: serverMode || (watchMode && !noServer),
+        serverPort
     });
 } else {
     await loadConfig();

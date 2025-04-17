@@ -1,7 +1,12 @@
 {
   "name": "bloggy-md",
   "description": "a simple CLI markdown -> html blog generator",
-  "keywords": ["markdown", "blog", "cli", "static-site"],
+  "keywords": [
+    "markdown",
+    "blog",
+    "cli",
+    "static-site"
+  ],
   "author": "unium <uniumfr@gmail.com>",
   "license": "MIT",
   "module": "index.js",
@@ -24,8 +29,8 @@
   ],
   "dependencies": {
     "colorette": "^2.0.20",
-    "highlight.js": "^11.11.1",
     "marked": "^15.0.8",
+    "socket.io": "^4.8.1",
     "yaml": "^2.7.1"
   }
 }
