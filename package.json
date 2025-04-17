@@ -11,7 +11,7 @@
   "license": "MIT",
   "module": "index.js",
   "type": "module",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "scripts": {
     "build": "bun build src/bloggy.js --compile --minify --outfile ./build/bloggy"
   },
