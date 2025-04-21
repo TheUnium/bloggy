@@ -189,7 +189,7 @@ export async function loadConfig() {
                 } else {
                     console.log(c.cyan(`📝 config updated to v${VERSION}`));
                 }
-                console.log(c.dim(`   check what's new: https://github.com/TheUnium/bloggy/releases/tag/${VERSION}`));
+                console.log(c.dim(`   check what's new: https://github.com/TheUnium/bloggy/releases/tag/${VERSION}\n`));
 
                 CONFIG = mergedConfig;
             } else {

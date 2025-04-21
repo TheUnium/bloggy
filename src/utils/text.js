@@ -47,7 +47,7 @@ export async function replaceAll(template, replacements, templateDir = null) {
         result = content;
 
         if (included.length > 0) {
-            console.log(c.green(`✓ included ${included.length} component(s): `) +
+            console.log(c.green(`${c.bold("📝 included")} ${included.length} component(s): `) +
                 c.dim(included.map(f => `'${f}'`).join(", ")));
         }
 
