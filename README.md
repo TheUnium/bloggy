@@ -63,7 +63,7 @@ behind the scenes it does this:
 - *validates* your markdown (spits out warns and errors, still makes the html file though)
 - parses it with `marked`
 - injects it into a template you provide
-- replaces tags like `<!-- [BLOGGY::TITLE] -->` in the template with the actual data
+- replaces tags like `{{! title }}` in the template with the actual data
 - saves the final HTML into the output folder
 
 ---
@@ -73,16 +73,19 @@ behind the scenes it does this:
 you provide a `template.html` and bloggy will lovingly fill in the blanks for you.
 it looks for these magic placeholder tags:
 
-| tag                        | what it does |
-|---------------------------|--------------|
-| `<!-- [BLOGGY::TITLE] -->`       | gets replaced with the post's title |
-| `<!-- [BLOGGY::DESCRIPTION] -->` | the posts description, most useful for seo tags |
-| `<!-- [BLOGGY::COLOR] -->`       | the post's accent color (you can use it as the page's theme-color for seo as well) |
-| `<!-- [BLOGGY::CONTENT] -->`     | this is where the html-ified markdown goes |
-| `<!-- [BLOGGY::DATE] -->` | gets replaced by the current date |
-| `<!-- [BLOGGY::TIME] -->` | gets replaced by the current time |
+| tag                                          | what it does                                                                              |
+|----------------------------------------------|-------------------------------------------------------------------------------------------|
+| `{{! title }}`                               | gets replaced with the post's title                                                       |
+| `{{! description }}`                         | the posts description, most useful for seo tags                                           |
+| `{{! color }}`                               | the post's accent color (you can use it as the page's theme-color for seo as well)        |
+| `{{! content }}`                             | this is where the html-ified markdown goes                                                |
+| `{{! date }}`                                | gets replaced by the current date (you can format it too, e.g. {{! date('DD/MM/YYYY') }}) |
+| `{{! time }}`                                | gets replaced by the current time (also format-friendly, e.g. {{! time('hh:mm A') }})     |
+| `{{! include('path/to/file.html/css/js') }}` | pulls in other templates, partials, headers, footers, css styles, etc                     |
 
-> tip: use the color to theme your post dynamically!
+> tip: use the color to theme your post dynamically!\
+> note: you can still use the old tag syntax for that tags that already existed at that time (eg. for title), however you should upgrade.\
+> note: the old tag syntax was `<!-- [BLOGGY::[TAG] -->` which was tedious to type out, so it was replaced with `{{! [tag] }}` 
 
 ---
 
@@ -137,6 +140,9 @@ after which you can start writing markdown!
 
 bloggy will look for a `config.yaml` for custom settings, here is the default one that is generated with the init flag :
 ```yaml
+bloggy:
+  version: "2.0.1"
+
 post:
   title: "Unnamed Post"
   description: "No description provided... so sad... ⏳⏳⏳"
@@ -144,6 +150,7 @@ post:
 
 paths:
   template: "path/to/template.html"
+  template_dir: "path/to/templates/folder"
   output_dir: "path/to/dist/folder"
 
 rules:
