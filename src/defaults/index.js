@@ -20,3 +20,4 @@
 export * from "./config.js";
 export * from "./html.js";
 export * from "./markdown.js";
+export * from "./components.js"

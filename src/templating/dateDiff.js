@@ -17,30 +17,13 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export const DEFAULT_CONFIG_TEMPLATE = `bloggy:
-  version: "{version}"
-
-post:
-  title: "Unnamed Post"
-  description: "No description provided... so sad... ⏳⏳⏳"
-  color: "#72d572"
-
-paths:
-  template: "{template_path}"
-  template_dir: "{template_dir}"
-  output_dir: "{output_dir}"
-
-rules:
-  allowRawHtml: false
-  maxParagraphLength: 500
-  requireImageAlts: true
-  allowConsecutiveHeaders: false
-  maxHeaderDepth: 4
-  requireListSpacing: true
-  requireTableSeparators: true
-  
-validation:
-  enabled: true
-  errors: true
-  warns: true
-`;
+export function processDateDiffTag(template) {
+  const now = new Date();
+  const timestamp = now.getTime();
+  const dateDiffRegex = /\{\{!\s*date_diff\s*\}\}/g;
+  return template.replace(dateDiffRegex, () => {
+    return `<script>
+        !function(){const o=${timestamp};!function(){const t=function(){const t=(new Date).getTime()-o,n=Math.floor(t/1e3);if(n<60)return"just now";if(n<3600){const o=Math.floor(n/60);return 1===o?"1 minute ago":o+" minutes ago"}if(n<86400){const o=Math.floor(n/3600);return 1===o?"1 hour ago":o+" hours ago"}if(n<2592e3){const o=Math.floor(n/86400);return 1===o?"1 day ago":o+" days ago"}if(n<31536e3){const o=Math.floor(n/2592e3);return 1===o?"1 month ago":o+" months ago"}const r=Math.floor(n/31536e3);return 1===r?"1 year ago":r+" years ago"}();document.write(t)}()}();
+    </script>`;
+  });
+}

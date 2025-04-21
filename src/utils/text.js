@@ -17,6 +17,11 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import { processIncludes } from "../templating/include.js";
+import * as c from "colorette";
+import { processDateTimeTags } from "../templating/dateTime.js";
+import { processDateDiffTag } from "../templating/dateDiff.js";
+
 export function parseFrontmatter(content) {
     const match = content.match(/^---\n([\s\S]+?)\n---\n/);
     if (!match) return { attributes: {}, body: content };
@@ -34,11 +39,35 @@ export function parseFrontmatter(content) {
     return { attributes, body: content.slice(match[0].length) };
 }
 
-export function replaceAll(template, replacements) {
+export async function replaceAll(template, replacements, templateDir = null) {
     let result = template;
-    for (const [tag, value] of Object.entries(replacements)) {
-        const regex = new RegExp(`<!--\\s*\\[BLOGGY::${tag}\\]\\s*-->`, "g");
-        result = result.replace(regex, value);
+
+    if (templateDir) {
+        const { content, included, errors } = await processIncludes(template, templateDir);
+        result = content;
+
+        if (included.length > 0) {
+            console.log(c.green(`✓ included ${included.length} component(s): `) +
+                c.dim(included.map(f => `'${f}'`).join(", ")));
+        }
+
+        if (errors.length > 0) {
+            console.log(c.yellow(`⚠️ ${errors.length} include error(s):`));
+            errors.forEach(err => {
+                console.log(c.yellow(`  • '${err.path}': ${err.error}`));
+            });
+        }
     }
+
+    result = processDateTimeTags(result);
+    result = processDateDiffTag(result);
+
+    for (const [tag, value] of Object.entries(replacements)) {
+      const escapedTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const legacyRegex = new RegExp(`<!--\\s*\\[BLOGGY::${escapedTag}\\s*\\]\\s*-->`, "gi");
+      const modernRegex = new RegExp(`{{!\\s*${escapedTag}\\s*}}`, "gi");
+      result = result.replace(legacyRegex, value).replace(modernRegex, value);
+    }
+
     return result;
 }

@@ -18,11 +18,12 @@
  */
 
 import { writeFile } from "fs/promises";
-import { resolve } from "path";
+import { resolve, dirname } from "path";
 import { existsSync, mkdirSync } from "fs";
 import * as c from "colorette";
 
-import { DEFAULT_CONFIG_TEMPLATE, DEFAULT_MARKDOWN_TEMPLATE, DEFAULT_HTML_TEMPLATE } from "../defaults/index.js";
+import { VERSION } from "../version.js";
+import { DEFAULT_CONFIG_TEMPLATE, DEFAULT_MARKDOWN_TEMPLATE, DEFAULT_HTML_TEMPLATE, DEFAULT_HEADER_TEMPLATE, DEFAULT_FOOTER_TEMPLATE, DEFAULT_CSS_TEMPLATE } from "../defaults/index.js";
 
 export async function initProject(projectDir) {
     try {
@@ -52,10 +53,43 @@ export async function initProject(projectDir) {
             console.log(`${c.yellow("⚠️")} template file already exists: ${c.dim(templatePath)}`);
         }
 
+        const headerPath = resolve(dirs.templates, "header.html");
+        if (!existsSync(headerPath)) {
+            await writeFile(headerPath, DEFAULT_HEADER_TEMPLATE, "utf8");
+            console.log(`${c.green("✓")} made header component: ${c.dim(headerPath)}`);
+        } else {
+            console.log(`${c.yellow("⚠️")} header component already exists: ${c.dim(headerPath)}`);
+        }
+
+        const footerPath = resolve(dirs.templates, "footer.html");
+        if (!existsSync(footerPath)) {
+            await writeFile(footerPath, DEFAULT_FOOTER_TEMPLATE, "utf8");
+            console.log(`${c.green("✓")} made footer component: ${c.dim(footerPath)}`);
+        } else {
+            console.log(`${c.yellow("⚠️")} footer component already exists: ${c.dim(footerPath)}`);
+        }
+
+        const cssPath = resolve(dirs.templates, "css/style.css");
+        const cssDir = dirname(cssPath);
+
+        if (!existsSync(cssDir)) {
+            mkdirSync(cssDir, { recursive: true });
+            console.log(`${c.blue("📁")} created css directory: ${c.dim(cssDir)}`);
+        }
+
+        if (!existsSync(cssPath)) {
+            await writeFile(cssPath, DEFAULT_CSS_TEMPLATE, "utf8");
+            console.log(`${c.green("✓")} made css component: ${c.dim(cssPath)}`);
+        } else {
+            console.log(`${c.yellow("⚠️")} css component already exists: ${c.dim(cssPath)}`);
+        }
+
         const configPath = resolve(dirs.root, "config.yaml");
         const configContent = DEFAULT_CONFIG_TEMPLATE
             .replace("{template_path}", templatePath)
-            .replace("{output_dir}", dirs.dist);
+            .replace("{template_dir}", dirs.templates)
+            .replace("{output_dir}", dirs.dist)
+            .replace("{version}", VERSION);
 
         if (!existsSync(configPath)) {
             await writeFile(configPath, configContent, "utf8");
@@ -64,21 +98,21 @@ export async function initProject(projectDir) {
             console.log(`${c.yellow("⚠️")} config file already exists: ${c.dim(configPath)}`);
         }
 
-        const markdownPath = resolve(dirs.markdown, "hello-world.md");
-        if (!existsSync(markdownPath)) {
-            await writeFile(markdownPath, DEFAULT_MARKDOWN_TEMPLATE, "utf8");
-            console.log(`${c.green("✓")} made example markdown file: ${c.dim(markdownPath)}`);
-        } else {
-            console.log(`${c.yellow("⚠️")} example markdown file already exists: ${c.dim(markdownPath)}`);
+                const markdownPath = resolve(dirs.markdown, "hello-world.md");
+                if (!existsSync(markdownPath)) {
+                    await writeFile(markdownPath, DEFAULT_MARKDOWN_TEMPLATE, "utf8");
+                    console.log(`${c.green("✓")} made example markdown file: ${c.dim(markdownPath)}`);
+                } else {
+                    console.log(`${c.yellow("⚠️")} example markdown file already exists: ${c.dim(markdownPath)}`);
+                }
+
+                console.log(`\n${c.bold(c.cyan("📝 bloggy"))} project init'd successfully!\n`);
+                console.log(`${c.bold(`Try ${c.cyan("📝 bloggy")} out:`)}`);
+                console.log(`  ${c.dim(`cd ${projectDir}`)}`);
+                console.log(`  ${c.cyan("bloggy")} markdown/hello-world.md\n`);
+
+            } catch (err) {
+                console.error(c.red(`failed to init project :(((( : ${err.message}`));
+                process.exit(1);
+            }
         }
-
-        console.log(`\n${c.bold(c.cyan("📝 bloggy"))} project init'd successfully!\n`);
-        console.log(`${c.bold(`Try ${c.cyan("📝 bloggy")} out:`)}`);
-        console.log(`  ${c.dim(`cd ${projectDir}`)}`);
-        console.log(`  ${c.cyan("bloggy")} markdown/hello-world.md\n`);
-
-    } catch (err) {
-        console.error(c.red(`failed to init project :(((( : ${err.message}`));
-        process.exit(1);
-    }
-}

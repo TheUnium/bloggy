@@ -17,30 +17,14 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-export const DEFAULT_CONFIG_TEMPLATE = `bloggy:
-  version: "{version}"
+import { getDefaultDateTimeValues } from './dateTime.js';
+import { processDateDiffTag } from './dateDiff.js';
 
-post:
-  title: "Unnamed Post"
-  description: "No description provided... so sad... ⏳⏳⏳"
-  color: "#72d572"
+export function getTemplateValues(customValues = {}) {
+  return {
+    ...getDefaultDateTimeValues(),
+    ...customValues
+  };
+}
 
-paths:
-  template: "{template_path}"
-  template_dir: "{template_dir}"
-  output_dir: "{output_dir}"
-
-rules:
-  allowRawHtml: false
-  maxParagraphLength: 500
-  requireImageAlts: true
-  allowConsecutiveHeaders: false
-  maxHeaderDepth: 4
-  requireListSpacing: true
-  requireTableSeparators: true
-  
-validation:
-  enabled: true
-  errors: true
-  warns: true
-`;
+export { processDateDiffTag };

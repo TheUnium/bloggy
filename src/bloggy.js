@@ -25,11 +25,12 @@ import { marked } from "marked";
 import * as c from "colorette";
 import { existsSync, mkdirSync } from "fs";
 
+import { VERSION } from "./version.js";
 import { setupWatcher } from "./watcher.js";
-import { CONFIG, loadConfig, validateMarkdown, printValidationResults, parseFrontmatter, replaceAll, initProject } from "./utils/index.js";
+import { CONFIG, loadConfig, validateMarkdown, printValidationResults, parseFrontmatter, replaceAll } from "./utils/index.js";
+import { getTemplateValues } from "./templating/index.js";
 import { printHelp, printVersion } from "./display.js";
-
-const VERSION = "1.2.0";
+import { initProject } from "./utils/init.js";
 
 
 async function bloggy(inputPath, options = {}) {
@@ -64,19 +65,18 @@ async function bloggy(inputPath, options = {}) {
         const templatePath = CONFIG.paths.template;
         try {
             const template = await readFile(templatePath, "utf8");
-
-            const now = new Date();
-            const date = now.toISOString().split("T")[0];
-            const time = now.toTimeString().split(" ")[0];
-
-            const finalHTML = replaceAll(template, {
+            const templateVars = getTemplateValues({
                 TITLE: title,
+                title,
                 DESCRIPTION: description,
+                description,
                 COLOR: color,
+                color,
                 CONTENT: htmlContent,
-                DATE: date,
-                TIME: time
+                content: htmlContent
             });
+
+            const finalHTML = await replaceAll(template, templateVars, CONFIG.paths.template_dir);
 
             const fileName = basename(fullPath, ".md");
             const outputDir = CONFIG.paths.output_dir;

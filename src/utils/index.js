@@ -21,3 +21,4 @@ export * from "./config.js";
 export * from "./markdown.js";
 export * from "./text.js";
 export * from "./init.js";
+export * from "../templating/include.js";
