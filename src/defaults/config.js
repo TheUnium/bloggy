@@ -44,3 +44,5 @@ validation:
   errors: true
   warns: true
 `;
+
+export const CONFIG_SECTIONS = ["bloggy", "post", "paths", "rules", "validation"];

@@ -23,7 +23,7 @@ import { resolve, dirname } from "path";
 import yaml from "yaml";
 import * as c from "colorette";
 import { VERSION } from "../version.js";
-import { DEFAULT_CONFIG_TEMPLATE } from "../defaults/config.js";
+import { DEFAULT_CONFIG_TEMPLATE, CONFIG_SECTIONS } from "../defaults/config.js";
 import { parse } from "yaml";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -62,6 +62,52 @@ export let CONFIG = {
 
 function getConfigPath() {
     return resolve(process.cwd(), "config.yaml");
+}
+
+function formatYamlWithSpacing(config) {
+    const yamlLines = [];
+    for (let i = 0; i < CONFIG_SECTIONS.length; i++) {
+        const section = CONFIG_SECTIONS[i];
+        if (config[section]) {
+            yamlLines.push(`${section}:`);
+            const sectionObj = config[section];
+            for (const [key, value] of Object.entries(sectionObj)) {
+                let formattedValue = value;
+                if (typeof value === 'string') {
+                    formattedValue = `"${value}"`;
+                }
+                yamlLines.push(`  ${key}: ${formattedValue}`);
+            }
+
+            if (i < CONFIG_SECTIONS.length - 1) {
+                yamlLines.push('');
+            }
+        }
+    }
+
+    const additionalKeys = Object.keys(config).filter(key => !CONFIG_SECTIONS.includes(key));
+    if (additionalKeys.length > 0) {
+        if (yamlLines.length > 0) {
+            yamlLines.push('');
+        }
+
+        for (const key of additionalKeys) {
+            yamlLines.push(`${key}:`);
+            const sectionObj = config[key];
+            if (typeof sectionObj === 'object' && sectionObj !== null) {
+                for (const [subKey, value] of Object.entries(sectionObj)) {
+                    let formattedValue = value;
+                    if (typeof value === 'string') formattedValue = `"${value}"`;
+                    yamlLines.push(`  ${subKey}: ${formattedValue}`);
+                }
+            } else {
+                yamlLines.push(`  ${sectionObj}`);
+            }
+            yamlLines.push('');
+        }
+    }
+
+    return yamlLines.join('\n');
 }
 
 function mergeWithDefaults(userConfig, defaultConfig) {
@@ -110,8 +156,8 @@ function needsUpdate(userConfig) {
 
 async function updateConfigFile(configPath, mergedConfig) {
     try {
-        const updatedYaml = yaml.stringify(mergedConfig);
-        await writeFile(configPath, updatedYaml, "utf8");
+        const formattedYaml = formatYamlWithSpacing(mergedConfig);
+        await writeFile(configPath, formattedYaml, "utf8");
         return true;
     } catch (err) {
         console.error(c.red(`Failed to update config file: ${err.message}`));
@@ -124,11 +170,13 @@ export async function loadConfig() {
     try {
         const yamlContent = await readFile(configPath, "utf8");
         const userConfig = yaml.parse(yamlContent);
+
         if (needsUpdate(userConfig)) {
             const defaultConfigObj = parse(DEFAULT_CONFIG_TEMPLATE
                 .replace("{template_path}", CONFIG.paths.template)
                 .replace("{template_dir}", CONFIG.paths.template_dir)
-                .replace("{output_dir}", CONFIG.paths.output_dir));
+                .replace("{output_dir}", CONFIG.paths.output_dir)
+                .replace("{version}", VERSION));
 
             defaultConfigObj.bloggy = { version: VERSION };
             const mergedConfig = mergeWithDefaults(userConfig, defaultConfigObj);
